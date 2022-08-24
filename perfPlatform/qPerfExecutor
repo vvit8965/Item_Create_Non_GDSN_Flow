@@ -51,6 +51,17 @@ pipeline {
                     }
                 }
             }
+            stage('Backup test results files') {
+                steps {
+                    container('kubehelm'){
+                        sh 'echo ==============Start JMeter result backup Process ========================'
+                        sh 'pwd'
+                        sh 'for pod in $(kubectl get pod -l jenkins/label={JOBNAME}_{BUILD_NUMBER}-mc2s7 -o custom-columns=:metadata.name); do kubectl cp $pod:/opt/perf-test-data/ /opt/results/jenkins/${JOBNAME}/${BUILD_NUMBER}/$pod/ ;done;'
+                        sh 'for pod in $(kubectl get pod -l app.kubernetes.io/component=jenkins-master -o custom-columns=:metadata.name); do kubectl cp $pod:/var/jenkins_home/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/performance-reports/JMeterCSV/ /opt/results/jenkins/${JOBNAME}/${BUILD_NUMBER}/ ;done;'
+                        sh 'echo ==============Finished JMeter result backup Process ========================'
+                    }
+                }
+            }
             stage('Read Performance Test Results') {
                 steps {
                     container('distributed-jmeter-master'){
