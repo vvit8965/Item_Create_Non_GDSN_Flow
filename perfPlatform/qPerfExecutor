@@ -54,7 +54,7 @@ pipeline {
             stage('Read Performance Test Results') {
                 steps {
                     container('distributed-jmeter-master'){
-                        sh 'sleep 30m'
+                        sh 'sleep 10m'
                         sh 'echo ===============Start read Performance Test Results======================='
                         sh 'pwd'
                         perfReport 'target/jmeter/results/*.csv'

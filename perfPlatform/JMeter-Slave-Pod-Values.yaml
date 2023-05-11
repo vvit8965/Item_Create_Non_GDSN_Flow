@@ -18,8 +18,8 @@ resources:
 
 # POD image configuration
 image:
-  repository: "avit9228/jmeter-plugins-slave"
-  tag: 5.4.3-test
+  repository: "sysco/jmeter-plugins-slave"
+  tag: 5.4.3-full
   pullPolicy: IfNotPresent
 
 
