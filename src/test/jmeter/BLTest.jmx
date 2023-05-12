@@ -26,7 +26,7 @@
           </elementProp>
           <elementProp name="env" elementType="Argument">
             <stringProp name="Argument.name">env</stringProp>
-            <stringProp name="Argument.value">${__P(env,qa)}</stringProp>
+            <stringProp name="Argument.value">${__P(env,prod)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -302,7 +302,7 @@
           <collectionProp name="Arguments.arguments">
             <elementProp name="testName" elementType="Argument">
               <stringProp name="Argument.name">testName</stringProp>
-              <stringProp name="Argument.value">Application5</stringProp>
+              <stringProp name="Argument.value">TQSV-QPerf</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="nodeName" elementType="Argument">
@@ -312,17 +312,17 @@
             </elementProp>
             <elementProp name="runId" elementType="Argument">
               <stringProp name="Argument.name">runId</stringProp>
-              <stringProp name="Argument.value">${__P(buildNo)}</stringProp>
+              <stringProp name="Argument.value">02</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="influxDBURL" elementType="Argument">
               <stringProp name="Argument.name">influxDBURL</stringProp>
-              <stringProp name="Argument.value">https://perfplatform.cloud.sysco.net/influxdb2</stringProp>
+              <stringProp name="Argument.value">https://perfplatform.cloud.sysco.net/influx</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="influxDBToken" elementType="Argument">
               <stringProp name="Argument.name">influxDBToken</stringProp>
-              <stringProp name="Argument.value">mycXs5gMOMqJ39i8tOCSvH7zxMTthVp2KqycRmlzQp1o8xz7CN__YooMMjNvtFUGeeWa4L1MFP66hU4sNZenOQ==</stringProp>
+              <stringProp name="Argument.value">9eanu4pcTwhfcQ9CyMAFoeAoXlYv08Efs4iFnGEneGaKXNO9AgSMQnrXnQfZNi8LoO86HV6PpOVB2kcSU3h8Lw==</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="influxDBOrganization" elementType="Argument">
@@ -332,7 +332,7 @@
             </elementProp>
             <elementProp name="influxDBBucket" elementType="Argument">
               <stringProp name="Argument.name">influxDBBucket</stringProp>
-              <stringProp name="Argument.value">qa</stringProp>
+              <stringProp name="Argument.value">prod_jmeter</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="influxDBFlushInterval" elementType="Argument">
