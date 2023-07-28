@@ -20,7 +20,7 @@ resources:
 image:
   repository: "sysco/jmeter-plugins-slave"
   tag: 5.5-light
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 
 # JMeter JVM memory configuration
