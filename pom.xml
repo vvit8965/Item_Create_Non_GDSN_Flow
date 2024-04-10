@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sysco.perfromance.engineering</groupId>
-    <artifactId>tqe-perf-eng-test-jenkins</artifactId>
-    <version>1.0.0</version>
+    <groupId>com.sysco.idp.testingplatform</groupId>
+    <artifactId>tp-qperf-baseproject-release</artifactId>
+    <version>3.3.1</version>
     <packaging>pom</packaging>
     <name>tqe-perf-eng-test-jenkins</name>
     <url>http://maven.apache.org</url>
@@ -112,5 +112,6 @@
         <perf.testplan>*</perf.testplan>
         <xms.setting>1024</xms.setting>
         <xmx.setting>1024</xmx.setting>
+        <qperf-release-version>3.3.1</qperf-release-version>
     </properties>
 </project>
