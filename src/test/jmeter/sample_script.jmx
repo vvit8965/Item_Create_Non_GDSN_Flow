@@ -289,7 +289,7 @@ f.close();
           <collectionProp name="Arguments.arguments">
             <elementProp name="testName" elementType="Argument">
               <stringProp name="Argument.name">testName</stringProp>
-              <stringProp name="Argument.value">TQSV_qPerf_Master</stringProp>
+              <stringProp name="Argument.value">JOBNAME_test</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="nodeName" elementType="Argument">

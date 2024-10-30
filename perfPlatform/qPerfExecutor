@@ -6,7 +6,7 @@ pipeline {
     }
 
     parameters {
-        string(defaultValue: "httpCounterDocker", description: 'jmeter script name', name: 'ScriptName')
+        string(defaultValue: "sample_script", description: 'jmeter script name', name: 'ScriptName')
         string(defaultValue: "qperfmaster", description: 'Project job name', name: 'JobName')
     }
 
