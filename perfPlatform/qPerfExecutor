@@ -77,6 +77,17 @@ pipeline {
                 container('distributed-jmeter-master') {
                     sh 'echo ===============Start read Performance Test Results======================='
                     sh 'pwd'
+
+                    // Add directory creation and copy check
+                    sh '''
+                        mkdir -p /var/jenkins_home/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/temp/target/jmeter/results/
+                        if ls target/jmeter/results/*.csv 1> /dev/null 2>&1; then
+                            cp target/jmeter/results/*.csv /var/jenkins_home/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/temp/target/jmeter/results/
+                        else
+                            echo "No CSV files found to copy."
+                        fi
+                    '''
+
                     perfReport 'target/jmeter/results/*.csv'
                     sh 'echo ===============Finishing Performance Test Results======================='
                 }
