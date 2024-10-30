@@ -11,7 +11,7 @@ pipeline {
     }
 
     environment {
-        //          JOBNAME = "qperfmaster"
+        // JOBNAME = "qperfmaster"
         scriptName = "${params.ScriptName}"
     }
 
@@ -19,7 +19,6 @@ pipeline {
         stage('Set Job Name') {
             steps {
                 script {
-
                     env.JOBNAME = params.JobName.toLowerCase().replaceAll("[^a-z0-9.-]", "-")
                     echo "Sanitized JOBNAME: ${env.JOBNAME}"
                 }
@@ -30,10 +29,14 @@ pipeline {
             steps {
                 container('kubehelm') {
                     sh 'echo =======================Start deploy JMeter Slaves==============='
-                    sh 'helm install --wait distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} jmeter-helm/jmeter-slave -f perfPlatform/JMeter-Slave-Pod-Values.yaml'
-                    sh 'kubectl wait --for=condition=ready pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s'
+                    sh '''
+                        helm install --wait distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} jmeter-helm/jmeter-slave -f perfPlatform/JMeter-Slave-Pod-Values.yaml
+                        kubectl wait --for=condition=ready pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s
+                    '''
                     script {
-                        env.jmeterSlaveNodesIPList = sh(returnStdout: true, script: 'kubectl get pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o jsonpath=\'{.items[*].status.podIP}\' | tr \' \' \',\'')
+                        env.jmeterSlaveNodesIPList = sh(returnStdout: true, script: '''
+                            kubectl get pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o jsonpath='{.items[*].status.podIP}' | tr ' ' ','
+                        ''').trim()
                         println("IP Details: ${env.jmeterSlaveNodesIPList}")
                     }
                     sh 'echo =======================Finishing deploy JMeter Slaves==============='
@@ -46,7 +49,11 @@ pipeline {
                 container('kubehelm') {
                     sh 'echo ===============Start copying data files======================='
                     sh 'pwd'
-                    sh 'for pod in $(kubectl get pod -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o custom-columns=:metadata.name); do kubectl cp src/test/testdata/ $pod:/opt/perf-test-data/;done;'
+                    sh '''
+                        for pod in $(kubectl get pod -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o custom-columns=:metadata.name); do
+                            kubectl cp src/test/testdata/ $pod:/opt/perf-test-data/
+                        done
+                    '''
                     sh 'echo ===============Finishing copying data files======================='
                 }
             }
@@ -56,8 +63,10 @@ pipeline {
             steps {
                 container('distributed-jmeter-master') {
                     sh 'echo ===============Start maven build execution======================='
-                    sh 'echo ${jmeterSlaveNodesIPList}'
-                    sh 'mvn clean install -DjmeterSlaveNodesIPList=${jmeterSlaveNodesIPList} -DscriptName=${scriptName} -DbuildNo=${BUILD_NUMBER}'
+                    sh '''
+                        echo ${jmeterSlaveNodesIPList}
+                        mvn clean install -DjmeterSlaveNodesIPList=${jmeterSlaveNodesIPList} -DscriptName=${scriptName} -DbuildNo=${BUILD_NUMBER}
+                    '''
                     sh 'echo ===============Finishing maven build execution======================='
                 }
             }
@@ -79,15 +88,23 @@ pipeline {
                 container('kubehelm') {
                     sh 'echo ==============Start JMeter result backup Process ========================'
                     sh 'pwd'
-                    sh 'for pod in $(kubectl get pod -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o custom-columns=:metadata.name); do kubectl cp $pod:/opt/perf-test-data/ /opt/results/jenkins/${JOB_NAME}/${BUILD_NUMBER}/$pod/ ;done;'
-                    sh 'for pod in $(kubectl get pod -l app.kubernetes.io/component=jenkins-controller -o custom-columns=:metadata.name); do kubectl cp $pod:/var/jenkins_home/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/performance-reports/JMeterCSV/ /opt/results/jenkins/${JOB_NAME}/${BUILD_NUMBER}/ ;done;'
+                    sh '''
+                        for pod in $(kubectl get pod -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o custom-columns=:metadata.name); do
+                            kubectl cp $pod:/opt/perf-test-data/ /opt/results/jenkins/${JOB_NAME}/${BUILD_NUMBER}/$pod/
+                        done
+                        for pod in $(kubectl get pod -l app.kubernetes.io/component=jenkins-controller -o custom-columns=:metadata.name); do
+                            kubectl cp $pod:/var/jenkins_home/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/performance-reports/JMeterCSV/ /opt/results/jenkins/${JOB_NAME}/${BUILD_NUMBER}/
+                        done
+                    '''
                     sh 'echo ==============Finished JMeter result backup Process ========================'
 
                     // sh 'sleep 10m'    // Add a sleep, In case want to backup some files from Jenkins slave workspace machines after test completion
 
                     sh 'echo ==============Start Erasing JMeter Slaves========================'
-                    sh 'helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}'
-                    sh 'kubectl wait --for=delete pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s'
+                    sh '''
+                        helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}
+                        kubectl wait --for=delete pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s
+                    '''
                     sh 'echo ===============Finishing Erasing JMeter Slaves======================='
                 }
             }
@@ -98,8 +115,10 @@ pipeline {
         unsuccessful {
             sh 'echo ==============Start post failure clearing =============='
             container('kubehelm') {
-                sh 'helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}'
-                sh 'kubectl wait --for=delete pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s'
+                sh '''
+                    helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}
+                    kubectl wait --for=delete pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s
+                '''
             }
             sh 'echo ==============Finishing post failure clearing=============='
         }
