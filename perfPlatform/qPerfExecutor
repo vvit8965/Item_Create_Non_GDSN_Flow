@@ -66,7 +66,7 @@ pipeline {
                     sh 'echo ===============Start maven build execution======================='
                     sh '''
                         echo ${jmeterSlaveNodesIPList}
-                        mvn clean install -DjmeterSlaveNodesIPList=${jmeterSlaveNodesIPList} -DscriptName=${scriptName} -DbuildNo=${BUILD_NUMBER}
+                        mvn clean install -DjmeterSlaveNodesIPList=${jmeterSlaveNodesIPList} -DscriptName=${env.scriptName} -DbuildNo=${BUILD_NUMBER}
                     '''
                     sh 'echo ===============Finishing maven build execution======================='
                 }
