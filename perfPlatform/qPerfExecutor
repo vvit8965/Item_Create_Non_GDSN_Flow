@@ -20,6 +20,7 @@ pipeline {
             steps {
                 script {
                     env.JOBNAME = params.JobName.toLowerCase().replaceAll("[^a-z0-9.-]", "-")
+                    echo "Scrptname: ${env.scriptName}"
                     echo "Sanitized JOBNAME: ${env.JOBNAME}"
                 }
             }
