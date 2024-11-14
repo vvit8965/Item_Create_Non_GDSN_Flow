@@ -7,7 +7,7 @@ pipeline {
 
 
     parameters {
-        string(name: 'jobNameParam', defaultValue: 'defaultproject', description: 'Enter the job name')
+        string(name: 'jobNameParam', defaultValue: '', description: 'Enter the job name')
         string(name: 'scriptNameParam', defaultValue: 'httpCounterDocker', description: 'Enter the JMeter script name without .jmx')
     }
 
