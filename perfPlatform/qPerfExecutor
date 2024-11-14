@@ -5,16 +5,21 @@ pipeline {
         }
     }
 
-    // Use parameters for flexibility
+
     parameters {
         string(name: 'jobNameParam', defaultValue: 'defaultproject', description: 'Enter the job name')
         string(name: 'scriptNameParam', defaultValue: 'httpCounterDocker', description: 'Enter the JMeter script name without .jmx')
     }
 
     environment {
-        // Dynamically generate JOBNAME from the parameter, ensuring it is Kubernetes-friendly.
-        JOBNAME = sh(script: "echo ${jobNameParam ?: JOB_NAME} | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g'", returnStdout: true).trim()
-        scriptName = "${params.scriptNameParam}"
+         JOBNAME = sh(script: """
+                echo ${jobNameParam ?: JOB_NAME} | \
+                tr '[:upper:]' '[:lower:]' | \
+                sed 's/[^a-z0-9.-]//g' | \
+                sed 's/^[.-]*//;s/[.-]*\$//'
+            """, returnStdout: true).trim()
+
+         scriptName = "${params.scriptNameParam}"
     }
 
     stages {
