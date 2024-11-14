@@ -7,7 +7,7 @@ pipeline {
 
 
     parameters {
-        string(name: 'jobNameParam', defaultValue: '', description: 'Enter the job name')
+        string(name: 'jobNameParam', defaultValue: '', description: 'Optional: Enter a custom job name. If left blank, the pipeline will automatically use the Jenkins job name.')
         string(name: 'scriptNameParam', defaultValue: 'httpCounterDocker', description: 'Enter the JMeter script name without .jmx')
     }
 
