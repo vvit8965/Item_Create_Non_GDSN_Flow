@@ -6,6 +6,7 @@ pipeline {
     }
 
     parameters {
+        // Removed the jobNameParam as per your request. Only keeping the JMeter script name parameter.
         string(
             name: 'scriptNameParam',
             defaultValue: 'httpCounterDocker',
@@ -14,7 +15,7 @@ pipeline {
     }
 
     environment {
-        // Use Jenkins job name, ensure it's Kubernetes-friendly
+        // Updated to use Jenkins job name directly, sanitized for Kubernetes compatibility
         JOBNAME = sh(script: """
             echo ${JOB_NAME} | \
             tr '[:upper:]' '[:lower:]' | \
@@ -22,7 +23,8 @@ pipeline {
             sed 's/^[.-]*//;s/[.-]*\$//'
         """, returnStdout: true).trim()
 
-       scriptName = "${params.scriptNameParam}" // Using the parameter for JMeter script name
+        // Using the scriptNameParam from the parameters block
+        scriptName = scriptNameParam
     }
 
     stages {
@@ -40,6 +42,7 @@ pipeline {
                 }
             }
         }
+        // Remaining stages stay the same as your original pipeline
         stage('Copying test data files to JMeter Slaves') {
             steps {
                 container('kubehelm') {
@@ -79,8 +82,7 @@ pipeline {
                     sh 'for pod in $(kubectl get pod -l app.kubernetes.io/component=jenkins-controller -o custom-columns=:metadata.name); do kubectl cp $pod:/var/jenkins_home/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/performance-reports/JMeterCSV/ /opt/results/jenkins/${JOB_NAME}/${BUILD_NUMBER}/ ;done;'
                     sh 'echo ==============Finished JMeter result backup Process ========================'
 
-                    // Add a sleep, In case want to backup some files from Jenkins slave workspace machines after test completion
-                    // sh 'sleep 10m'
+                    // sh 'sleep 10m'    // Add a sleep, In case want to backup some files from Jenkins slave workspace machines after test completion
 
                     sh 'echo ==============Start Erasing JMeter Slaves========================'
                     sh 'helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}'
