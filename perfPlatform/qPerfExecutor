@@ -76,28 +76,30 @@ pipeline {
                 container('kubehelm') {
                     sh 'echo ==============Start JMeter result backup Process========================'
                     sh 'pwd'
-                    sh """
-                    for pod in \$(kubectl get pod -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o custom-columns=:metadata.name); do
-                        kubectl cp \$pod:/opt/perf-test-data/ "/opt/results/jenkins/${JOB_NAME// /_}/${BUILD_NUMBER}/\$pod/";
-                    done;
-                    """
-                    sh """
-                    for pod in \$(kubectl get pod -l app.kubernetes.io/component=jenkins-controller -o custom-columns=:metadata.name); do
-                        kubectl cp \$pod:/var/jenkins_home/jobs/${JOB_NAME// /_}/builds/${BUILD_NUMBER}/performance-reports/JMeterCSV/ "/opt/results/jenkins/${JOB_NAME// /_}/${BUILD_NUMBER}/";
-                    done;
-                    """
+
+                    // Backup test data from slave pods
+                    sh '''
+                    for pod in $(kubectl get pod -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o custom-columns=:metadata.name); do
+                        kubectl cp $pod:/opt/perf-test-data/ "/opt/results/jenkins/${JOB_NAME// /_}/${BUILD_NUMBER}/$pod/";
+                    done
+                    '''
+
+                    // Backup performance reports from Jenkins controller pods
+                    sh '''
+                    for pod in $(kubectl get pod -l app.kubernetes.io/component=jenkins-controller -o custom-columns=:metadata.name); do
+                        kubectl cp $pod:/var/jenkins_home/jobs/${JOB_NAME// /_}/builds/${BUILD_NUMBER}/performance-reports/JMeterCSV/ "/opt/results/jenkins/${JOB_NAME// /_}/${BUILD_NUMBER}/";
+                    done
+                    '''
+
                     sh 'echo ==============Finished JMeter result backup Process========================'
 
-                    // add a sleep before jmeter slave deletes
-                    // sh 'sleep 10m'
+                    // Uninstall JMeter slave pods and wait for deletion
+                    sh '''
+                    helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}
+                    kubectl wait --for=delete pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s
+                    '''
 
-                    sh 'echo ==============Start Erasing JMeter Slaves========================'
-                                sh """
-                                helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}
-                                kubectl wait --for=delete pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s
-                                """
-                                sh 'echo ===============Finishing Erasing JMeter Slaves======================='
-
+                    sh 'echo ===============Finishing Erasing JMeter Slaves======================='
                 }
             }
         }
