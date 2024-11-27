@@ -16,11 +16,12 @@ pipeline {
     environment {
         // Use Jenkins job name, ensuring it's Kubernetes-friendly
         JOBNAME = sh(script: """
-            echo ${JOB_NAME} | \
-            tr '[:upper:]' '[:lower:]' | \
-            sed 's/[^a-z0-9.-]//g' | \
-            sed 's/^[.-]*//;s/[.-]*\$//'
-        """, returnStdout: true).trim()
+                echo ${JOB_NAME} | \
+                tr '[:upper:]' '[:lower:]' | \
+                sed 's/ /_/g' | \
+                sed 's/[^a-z0-9.-]//g' | \
+                sed 's/^[.-]*//;s/[.-]*\$//'
+            """, returnStdout: true).trim()
 
         scriptName = "${params.scriptNameParam}"  // Using the parameter for JMeter script name
     }
@@ -73,19 +74,30 @@ pipeline {
         stage('Erase JMeter Slaves') {
             steps {
                 container('kubehelm') {
-                    sh 'echo ==============Start JMeter result backup Process ========================'
+                    sh 'echo ==============Start JMeter result backup Process========================'
                     sh 'pwd'
-                    sh 'for pod in $(kubectl get pod -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o custom-columns=:metadata.name); do kubectl cp $pod:/opt/perf-test-data/ /opt/results/jenkins/${JOB_NAME}/${BUILD_NUMBER}/$pod/ ;done;'
-                    sh 'for pod in $(kubectl get pod -l app.kubernetes.io/component=jenkins-controller -o custom-columns=:metadata.name); do kubectl cp $pod:/var/jenkins_home/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/performance-reports/JMeterCSV/ /opt/results/jenkins/${JOB_NAME}/${BUILD_NUMBER}/ ;done;'
-                    sh 'echo ==============Finished JMeter result backup Process ========================'
+                    sh """
+                    for pod in \$(kubectl get pod -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} -o custom-columns=:metadata.name); do
+                        kubectl cp \$pod:/opt/perf-test-data/ "/opt/results/jenkins/${JOB_NAME// /_}/${BUILD_NUMBER}/\$pod/";
+                    done;
+                    """
+                    sh """
+                    for pod in \$(kubectl get pod -l app.kubernetes.io/component=jenkins-controller -o custom-columns=:metadata.name); do
+                        kubectl cp \$pod:/var/jenkins_home/jobs/${JOB_NAME// /_}/builds/${BUILD_NUMBER}/performance-reports/JMeterCSV/ "/opt/results/jenkins/${JOB_NAME// /_}/${BUILD_NUMBER}/";
+                    done;
+                    """
+                    sh 'echo ==============Finished JMeter result backup Process========================'
 
                     // add a sleep before jmeter slave deletes
                     // sh 'sleep 10m'
 
                     sh 'echo ==============Start Erasing JMeter Slaves========================'
-                    sh 'helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}'
-                    sh 'kubectl wait --for=delete pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s'
-                    sh 'echo ===============Finishing Erasing JMeter Slaves======================='
+                                sh """
+                                helm uninstall distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER}
+                                kubectl wait --for=delete pods -l app.kubernetes.io/instance=distributed-jmeter-slave-${JOBNAME}-${BUILD_NUMBER} --timeout=90s
+                                """
+                                sh 'echo ===============Finishing Erasing JMeter Slaves======================='
+
                 }
             }
         }
