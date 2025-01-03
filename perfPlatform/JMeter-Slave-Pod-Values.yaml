@@ -20,7 +20,7 @@ resources:
 image:
   repository: avit9228/jmeter-plugins-slave
   tag: 5.6.3-light
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 
 # JMeter JVM memory configuration
