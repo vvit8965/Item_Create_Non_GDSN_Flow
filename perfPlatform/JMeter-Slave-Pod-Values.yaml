@@ -19,7 +19,7 @@ resources:
 # POD image configuration
 image:
   repository: avit9228/jmeter-plugins-slave
-  tag: 5.6.3-full
+  tag: 5.6.3-extended-log
   pullPolicy: Always
 
 
