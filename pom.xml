@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sysco.pe.testingplatform</groupId>
+    <groupId>com.sysco.testingplatform</groupId>
     <artifactId>tp-qperf-baseproject-release</artifactId>
     <version>3.4.0</version>
     <packaging>pom</packaging>
