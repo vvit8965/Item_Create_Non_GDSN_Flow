@@ -7,6 +7,7 @@ pod:
   # The number of JMete slave pods required
   replicaCount: 1
 
+
 # JMeter Slave POD resource configuration
 resources:
   limits:
@@ -18,8 +19,8 @@ resources:
 
 # POD image configuration
 image:
-  repository: "sysco/jmeter-plugins-slave"
-  tag: 5.5-light
+  repository: sysco/jmeter-plugins-slave
+  tag: 5.6.3-light
   pullPolicy: IfNotPresent
 
 
