@@ -5,12 +5,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sysco.testingplatform</groupId>
-    <artifactId>tp-qperf-baseproject-release</artifactId>
+    <artifactId>tp-qe-sageTasteBudProject</artifactId>
     <version>3.4.0</version>
     <packaging>pom</packaging>
     <name>tqe-perf-eng-test-jenkins</name>
     <url>http://maven.apache.org</url>
     <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.5</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
