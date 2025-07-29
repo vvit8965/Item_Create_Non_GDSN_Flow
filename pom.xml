@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sysco.testingplatform</groupId>
-    <artifactId>tp-qe-sageTasteBudProject</artifactId>
+    <artifactId>tp-qperf-baseproject-release</artifactId>
     <version>3.4.0</version>
     <packaging>pom</packaging>
     <name>tqe-perf-eng-test-jenkins</name>
