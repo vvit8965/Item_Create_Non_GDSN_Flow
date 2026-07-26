@@ -23,7 +23,7 @@ pipeline {
                 sed 's/^[.-]*//;s/[.-]*\$//'
             """, returnStdout: true).trim()
 
-        scriptName = "${params.scriptNameParam}"  // Using the parameter for JMeter script name
+        scriptName = "Item_Create_Non_GDSN_Flow"  // Using the parameter for JMeter script name
     }
 
     stages {
