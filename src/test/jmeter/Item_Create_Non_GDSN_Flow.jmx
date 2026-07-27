@@ -35980,7 +35980,7 @@ vars.get(&quot;requestStatus&quot;) == &quot;SUPPLIER_ACTION_REQUIRED&quot;
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">performance-reports/JMeterCSV/results.jtl</stringProp>
+          <stringProp name="filename">target/jmeter/results/results.csv</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
