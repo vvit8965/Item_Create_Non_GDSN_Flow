@@ -10,14 +10,13 @@
     </TestPlan>
     <hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Supplier Suite Activities">
-        <intProp name="ThreadGroup.num_threads">50</intProp>
+        <intProp name="ThreadGroup.num_threads">10</intProp>
         <intProp name="ThreadGroup.ramp_time">10</intProp>
-        <longProp name="ThreadGroup.duration">3600</longProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
-          <intProp name="LoopController.loops">-1</intProp>
+          <stringProp name="LoopController.loops">1</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
       </ThreadGroup>
@@ -34685,7 +34684,7 @@ vars.get(&quot;requestStatus&quot;) == &quot;SUPPLIER_ACTION_REQUIRED&quot;
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Initial_Login/itemmanagement/item-creation/associate/requests/${id}/approval-view-408" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Initial_Login/itemmanagement/item-creation/associate/requests/${id}/approval-view-408">
             <stringProp name="HTTPSampler.domain">bff-qa.sss.mdm-supplier-np.us-east-1.aws.sysco.net</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -35118,7 +35117,7 @@ vars.get(&quot;requestStatus&quot;) == &quot;SUPPLIER_ACTION_REQUIRED&quot;
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Initial_Login/itemmanagement/item-creation/associate/material-description/words/second-414" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Initial_Login/itemmanagement/item-creation/associate/material-description/words/second-414">
             <stringProp name="HTTPSampler.domain">bff-qa.sss.mdm-supplier-np.us-east-1.aws.sysco.net</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -35134,6 +35133,7 @@ vars.get(&quot;requestStatus&quot;) == &quot;SUPPLIER_ACTION_REQUIRED&quot;
                   <stringProp name="Argument.name">firstWord</stringProp>
                   <stringProp name="Argument.value">PUDDING</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -35189,7 +35189,7 @@ vars.get(&quot;requestStatus&quot;) == &quot;SUPPLIER_ACTION_REQUIRED&quot;
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Initial_Login/itemmanagement/item-creation/associate/requests/${id}/approve?approvedUser=vimarsha.vithanage@sysco.com-415" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Initial_Login/itemmanagement/item-creation/associate/requests/${id}/approve?approvedUser=vimarsha.vithanage@sysco.com-415">
             <stringProp name="HTTPSampler.domain">bff-qa.sss.mdm-supplier-np.us-east-1.aws.sysco.net</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
@@ -35261,7 +35261,7 @@ vars.get(&quot;requestStatus&quot;) == &quot;SUPPLIER_ACTION_REQUIRED&quot;
             </HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Approve the request as Associate" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Approve the request as Associate">
             <stringProp name="HTTPSampler.domain">bff-qa.sss.mdm-supplier-np.us-east-1.aws.sysco.net</stringProp>
             <stringProp name="HTTPSampler.port">443</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>
